@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ParkSense – AI Smart Parking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="logo"><i>P</i>ParkSense</div>
+  <nav id="nav">
+    <button data-v="dash" class="on">Live map</button><button data-v="book">Book a slot</button><button data-v="mine">My bookings</button><button data-v="gate" id="gateNav" hidden>Gate</button><button data-v="ins">AI insights</button><button data-v="auth" id="authNav">Sign in</button>
+  </nav>
+  <div class="tools"><span class="chip" id="who"></span><span id="clock"></span><button class="btn alt" id="theme" aria-label="Toggle theme">◐</button></div>
+</header>
+<main>
+<section class="view on" id="dash">
+  <div class="hero"><div><h1>Find a free bay in seconds</h1><p>Live availability across all zones. Tap any green bay to start booking it.</p></div>
+  <select id="zoneFilter" style="width:auto" aria-label="Filter zone"><option value="">All zones</option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+  <div class="stats" id="stats"></div>
+  <div class="legend"><span><i class="dot" style="background:var(--free)"></i>Free</span><span><i class="dot" style="background:var(--res)"></i>Reserved</span><span><i class="dot" style="background:var(--occ)"></i>Occupied</span></div>
+  <div id="zones"></div>
+</section>
+
+<section class="view" id="book">
+  <div class="hero"><div><h1>Book a parking slot</h1><p>Tell us about your vehicle. Our AI picks the best bay, or choose one yourself.</p></div></div>
+  <div class="grid2">
+    <div class="card">
+      <label for="plate">Vehicle number</label><input id="plate" placeholder="AP31 AB 1234" maxlength="13" autocomplete="off">
+      <label for="vtype">Vehicle type</label>
+      <select id="vtype"><option value="car">Car</option><option value="ev">Electric car</option><option value="bike">Motorbike</option><option value="acc">Accessible permit</option></select>
+      <label for="hours">Duration: <span id="hv">2</span> hours</label><input type="range" id="hours" min="1" max="12" value="2">
+      <label for="pref">What matters most?</label>
+      <select id="pref"><option value="near">Closest to the entrance</option><option value="cheap">Lowest price</option><option value="charge">EV charging</option></select>
+      <label for="slotSel">Slot</label><select id="slotSel"></select>
+      <div class="row"><button class="btn alt" id="recBtn">✨ Recommend with AI</button></div>
+      <div id="aiBox"></div>
+    </div>
+    <div class="card"><h3>Price estimate</h3><div id="priceBox"></div>
+      <div class="row"><button class="btn" id="confirm">Confirm booking</button></div>
+      <p style="color:var(--mute);font-size:13px">Prices rise when the lot is busy. Your rate is locked in when you book.</p></div>
+  </div>
+</section>
+
+<section class="view" id="mine">
+  <div class="hero"><div><h1>My bookings</h1><p>Pay to confirm your bay, check in on arrival, and check out when you leave. Unpaid holds expire after 10 minutes.</p></div></div>
+  <div id="bkList"></div>
+</section>
+
+<section class="view" id="gate">
+  <div class="hero"><div><h1>Gate control</h1><p>Staff only. Simulated number-plate recognition for entry and exit.</p></div></div>
+  <div class="grid2">
+    <div class="card"><h3>Entry gate</h3><div class="scan" id="scanE">– – – –</div>
+      <label for="gp">Plate (or scan)</label><input id="gp" placeholder="AP39 CD 5678" maxlength="13">
+      <label for="gt">Vehicle type</label><select id="gt"><option value="car">Car</option><option value="ev">Electric car</option><option value="bike">Motorbike</option><option value="acc">Accessible permit</option></select>
+      <div class="row"><button class="btn alt" id="scanBtn">📷 Scan plate</button><button class="btn good" id="admit">Admit vehicle</button></div><div id="entryOut"></div></div>
+    <div class="card"><h3>Exit gate</h3><div class="scan" id="scanX">– – – –</div>
+      <label for="xp">Plate</label><input id="xp" placeholder="Enter plate to exit" maxlength="13">
+      <div class="row"><button class="btn" id="exitBtn">Pay and exit</button></div><div id="exitOut"></div></div>
+  </div>
+</section>
+
+<section class="view" id="ins">
+  <div class="hero"><div><h1>AI insights</h1><p>Predicted occupancy for today, blended with what the lot looks like right now.</p></div></div>
+  <div class="stats" id="insStats"></div>
+  <div class="card"><h3>Predicted occupancy by hour</h3><div class="chart" id="chart"></div><div class="axis" id="axis"></div></div>
+  <div class="grid2" style="margin-top:16px"><div class="card"><h3>Zone usage</h3><div id="zoneUse"></div></div><div class="card"><h3>Smart tips</h3><div id="tips"></div></div></div>
+  <div id="adminBox"></div>
+</section>
+<section class="view" id="auth">
+  <div class="hero"><div><h1>Your account</h1><p>Bookings and payments are tied to your account, so you can pick them up on any device.</p></div></div>
+  <div class="card" style="max-width:420px" id="guest">
+    <div class="row" style="margin-top:0"><button class="btn" id="tabIn">Sign in</button><button class="btn alt" id="tabUp">Create account</button></div>
+    <div id="nameRow" hidden><label for="an">Full name</label><input id="an" autocomplete="name" maxlength="40"></div>
+    <label for="ae">Email</label><input id="ae" type="email" autocomplete="email">
+    <label for="ap">Password</label><input id="ap" type="password" autocomplete="current-password" placeholder="At least 8 characters">
+    <div class="row"><button class="btn good" id="authGo">Sign in</button></div>
+    <p class="mute">Demo admin: admin@parksense.local / admin123</p>
+  </div>
+  <div class="card" style="max-width:420px" id="acct" hidden><h3 id="acName"></h3><p class="mute" id="acInfo"></p><div class="row"><button class="btn bad" id="logout">Sign out</button></div></div>
+</section>
+</main>
+<dialog id="dlg"></dialog><div id="toast" role="status"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
